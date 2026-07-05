@@ -4,13 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Hangout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="game-container"></div>
+  
+  <div id="join-screen">
+    <div class="join-box">
+      <h1>hangout</h1>
+      <input type="text" id="username" placeholder="username" autocomplete="off" maxlength="15">
+      <input type="text" id="room" placeholder="room code" autocomplete="off" maxlength="10">
+      <button id="join-btn">join room</button>
+    </div>
+  </div>
+
+  <div id="game-container" class="hidden">
+    <div id="grid-world"></div>
+    
+    <div id="ui-layer">
+      <div id="chat-box">
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" placeholder="say something..." autocomplete="off">
+      </div>
+      
+      <div id="mobile-dpad">
+        <button class="dpad-btn up" data-dir="up">^</button>
+        <button class="dpad-btn left" data-dir="left"><</button>
+        <button class="dpad-btn right" data-dir="right">></button>
+        <button class="dpad-btn down" data-dir="down">v</button>
+      </div>
+    </div>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
-
