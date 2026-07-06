@@ -1,6 +1,7 @@
 const socket = io();
 
 const joinScreen = document.getElementById('join-screen');
+const joinForm = document.getElementById('join-form');
 const gameContainer = document.getElementById('game-container');
 const gridWorld = document.getElementById('grid-world');
 const joinBtn = document.getElementById('join-btn');
@@ -20,7 +21,7 @@ function joinRoom(username, room, color) {
   joinScreen.style.display = 'none';
   gameContainer.classList.remove('hidden');
   document.body.classList.add('paper-bg');
-  roomDisplay.innerText = `Room: ${room}`;
+  roomDisplay.innerText = `room ${room}`;
   
   sessionStorage.setItem('hangout_user', JSON.stringify({ username, room, color }));
   
@@ -33,7 +34,8 @@ if (savedSession) {
   joinRoom(username, room, color);
 }
 
-joinBtn.addEventListener('click', () => {
+joinForm.addEventListener('submit', (e) => {
+  e.preventDefault();
   const username = usernameInput.value.trim();
   const room = roomInput.value.trim();
   const color = document.querySelector('input[name="color"]:checked').value;

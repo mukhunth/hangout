@@ -10,7 +10,7 @@
 <body>
   
   <div id="join-screen">
-    <div class="join-box">
+    <form id="join-form" class="join-box">
       <h1>hangout</h1>
       <input type="text" id="username" placeholder="username" autocomplete="off" maxlength="15">
       <input type="text" id="room" placeholder="room code" autocomplete="off" maxlength="10">
@@ -23,17 +23,17 @@
         <label><input type="radio" name="color" value="#bae1ff"><span class="swatch" style="background: #bae1ff"></span></label>
       </div>
 
-      <button id="join-btn">join room</button>
-    </div>
+      <button type="submit" id="join-btn">join room</button>
+    </form>
   </div>
 
   <div id="game-container" class="hidden">
     <div id="grid-world"></div>
     
     <div id="ui-layer">
-      <div id="top-hud">
-        <span id="room-display"></span>
-        <button id="leave-btn">leave</button>
+      <div id="action-stack">
+        <button class="stack-btn">watch party</button>
+        <button id="leave-btn">leave <span id="room-display"></span></button>
       </div>
       
       <div id="chat-box">
