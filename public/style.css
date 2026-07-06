@@ -61,12 +61,39 @@ body {
   color: var(--accent-color);
 }
 
-.join-box input {
+.join-box input[type="text"] {
   padding: 10px;
   font-size: 1.2rem;
   border: 1px solid #aaa;
   border-radius: 4px;
   outline: none;
+}
+
+.color-picker {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.color-picker input {
+  display: none;
+}
+
+.swatch {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--border-radius-sketchy);
+  border: 2px solid var(--text-color);
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.color-picker input:checked + .swatch {
+  opacity: 1;
+  transform: scale(1.2);
 }
 
 .join-box button {

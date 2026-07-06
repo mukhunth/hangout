@@ -9,12 +9,12 @@ const roomInput = document.getElementById('room');
 const dpadBtns = document.querySelectorAll('.dpad-btn');
 
 let currentRoom = '';
-let myId = null;
 const GRID_SIZE = 30;
 
 joinBtn.addEventListener('click', () => {
   const username = usernameInput.value.trim();
   const room = roomInput.value.trim();
+  const color = document.querySelector('input[name="color"]:checked').value;
   
   if (username && room) {
     currentRoom = room;
@@ -23,7 +23,15 @@ joinBtn.addEventListener('click', () => {
     gameContainer.classList.remove('hidden');
     document.body.classList.add('paper-bg');
     
-    renderAvatar('temp_id', { x: 5, y: 5, username, color: '#88e389' });
+    socket.emit('join', { username, room, color });
+  }
+});
+
+socket.on('stateUpdate', (roomState) => {
+  gridWorld.innerHTML = '';
+  
+  for (const [id, user] of Object.entries(roomState.users)) {
+    renderAvatar(id, user);
   }
 });
 
@@ -38,7 +46,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight' || e.key === 'd') dir = 'right';
 
   if (dir) {
-    console.log('moving', dir);
+    socket.emit('move', { dir });
   }
 });
 
@@ -46,25 +54,21 @@ dpadBtns.forEach(btn => {
   btn.addEventListener('touchstart', (e) => {
     e.preventDefault(); 
     const dir = btn.getAttribute('data-dir');
-    console.log('moving', dir);
+    socket.emit('move', { dir });
   });
 });
 
 function renderAvatar(id, data) {
-  let el = document.getElementById(`player-${id}`);
+  let el = document.createElement('div');
+  el.id = `player-${id}`;
+  el.className = 'avatar';
   
-  if (!el) {
-    el = document.createElement('div');
-    el.id = `player-${id}`;
-    el.className = 'avatar';
-    
-    const nameTag = document.createElement('div');
-    nameTag.className = 'avatar-name';
-    nameTag.innerText = data.username;
-    
-    el.appendChild(nameTag);
-    gridWorld.appendChild(el);
-  }
+  const nameTag = document.createElement('div');
+  nameTag.className = 'avatar-name';
+  nameTag.innerText = data.username;
+  
+  el.appendChild(nameTag);
+  gridWorld.appendChild(el);
 
   el.style.backgroundColor = data.color;
   el.style.left = `${data.x * GRID_SIZE}px`;
