@@ -29,10 +29,11 @@ io.on('connection', (socket) => {
       username,
       color,
       x: Math.floor(Math.random() * 10) + 1,
-      y: Math.floor(Math.random() * 10) + 1
+      y: Math.floor(Math.random() * 10) + 5
     };
 
     io.to(room).emit('stateUpdate', rooms[room]);
+    io.to(room).emit('chatMessage', { type: 'system', text: `${username} joined the room` });
   });
 
   socket.on('move', ({ dir }) => {
@@ -48,14 +49,28 @@ io.on('connection', (socket) => {
     io.to(currentRoom).emit('stateUpdate', rooms[currentRoom]);
   });
 
+  socket.on('chatMessage', (text) => {
+    if (!currentRoom || !rooms[currentRoom] || !rooms[currentRoom].users[socket.id]) return;
+    
+    const user = rooms[currentRoom].users[socket.id];
+    io.to(currentRoom).emit('chatMessage', {
+      type: 'user',
+      sender: user.username,
+      color: user.color,
+      text: text
+    });
+  });
+
   socket.on('disconnect', () => {
-    if (currentRoom && rooms[currentRoom]) {
+    if (currentRoom && rooms[currentRoom] && rooms[currentRoom].users[socket.id]) {
+      const username = rooms[currentRoom].users[socket.id].username;
       delete rooms[currentRoom].users[socket.id];
 
       if (Object.keys(rooms[currentRoom].users).length === 0) {
         delete rooms[currentRoom];
       } else {
         io.to(currentRoom).emit('stateUpdate', rooms[currentRoom]);
+        io.to(currentRoom).emit('chatMessage', { type: 'system', text: `${username} left the room` });
       }
     }
   });

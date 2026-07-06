@@ -8,6 +8,8 @@ const usernameInput = document.getElementById('username');
 const roomInput = document.getElementById('room');
 const roomDisplay = document.getElementById('room-display');
 const leaveBtn = document.getElementById('leave-btn');
+const chatInput = document.getElementById('chat-input');
+const chatMessages = document.getElementById('chat-messages');
 
 let currentRoom = '';
 const GRID_SIZE = 30;
@@ -51,6 +53,32 @@ socket.on('stateUpdate', (roomState) => {
   
   for (const [id, user] of Object.entries(roomState.users)) {
     renderAvatar(id, user);
+  }
+});
+
+socket.on('chatMessage', (msg) => {
+  const div = document.createElement('div');
+  div.style.marginBottom = '5px';
+  
+  if (msg.type === 'system') {
+    div.style.color = '#888';
+    div.style.fontStyle = 'italic';
+    div.innerText = msg.text;
+  } else {
+    div.innerHTML = `<strong style="color: ${msg.color}">${msg.sender}:</strong> ${msg.text}`;
+  }
+  
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+chatInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const text = chatInput.value.trim();
+    if (text) {
+      socket.emit('chatMessage', text);
+      chatInput.value = '';
+    }
   }
 });
 
