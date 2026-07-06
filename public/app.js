@@ -4,7 +4,6 @@ const joinScreen = document.getElementById('join-screen');
 const joinForm = document.getElementById('join-form');
 const gameContainer = document.getElementById('game-container');
 const gridWorld = document.getElementById('grid-world');
-const joinBtn = document.getElementById('join-btn');
 const usernameInput = document.getElementById('username');
 const roomInput = document.getElementById('room');
 const roomDisplay = document.getElementById('room-display');

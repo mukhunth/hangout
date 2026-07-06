@@ -8,7 +8,6 @@
   --border-radius-sketchy: 255px 15px 225px 15px/15px 225px 15px 255px;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --bg-overlay-chat: rgba(255, 255, 255, 0.9);
-  --bg-overlay-dpad: rgba(255, 255, 255, 0.8);
 }
 
 * {
@@ -190,7 +189,7 @@ body {
 
 .stack-btn:hover {
   background: var(--btn-hover-color);
-  color: var(--text-color-light);
+  color: var(--text-color-muted);
 }
 
 #leave-btn {
@@ -198,7 +197,7 @@ body {
   color: var(--bg-color);
   border: none;
   border-radius: var(--border-radius-sketchy);
-  padding: 5px 15px;
+  padding: 10px 20px;
   font-size: 1.2rem;
   cursor: pointer;
 }
@@ -237,6 +236,18 @@ body {
   border-radius: 0 0 10px 10px;
 }
 
+#move-label {
+  display: block;
+  position: absolute;
+  top: 80px;
+  width: 100vw;
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 #swipe-label {
   display: none;
   position: absolute;
@@ -253,10 +264,20 @@ body {
   #swipe-label {
     display: block;
   }
+  #move-label {
+    display: none;
+  }
   #chat-box {
     width: calc(100vw - 40px);
   }
   #chat-messages {
     height: 100px;
+  }
+  #action-stack {
+    flex-direction: row;
+    bottom: 180px;
+    width: calc(100vw - 40px);
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 }
