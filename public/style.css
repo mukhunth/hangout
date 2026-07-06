@@ -1,11 +1,14 @@
 :root {
   --bg-color: #fff;
   --text-color: #333;
-  --text-color-light: #fff;
+  --text-color-muted: #aaa;
   --accent-color: #88e389;
   --btn-hover-color: #555;
   --grid-line-color: #d4e5ff;
   --border-radius-sketchy: 255px 15px 225px 15px/15px 225px 15px 255px;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --bg-overlay-chat: rgba(255, 255, 255, 0.9);
+  --bg-overlay-dpad: rgba(255, 255, 255, 0.8);
 }
 
 * {
@@ -51,7 +54,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+  box-shadow: 4px 4px 0px var(--shadow-color);
   text-align: center;
 }
 
@@ -64,7 +67,7 @@ body {
 .join-box input[type="text"] {
   padding: 10px;
   font-size: 1.2rem;
-  border: 1px solid #aaa;
+  border: 1px solid var(--text-color-muted);
   border-radius: 4px;
   outline: none;
 }
@@ -100,7 +103,7 @@ body {
   padding: 10px;
   font-size: 1.5rem;
   background-color: var(--text-color);
-  color: var(--text-color-light);
+  color: var(--bg-color);
   border: none;
   border-radius: var(--border-radius-sketchy);
   cursor: pointer;
@@ -173,7 +176,7 @@ body {
   display: flex;
   gap: 20px;
   align-items: center;
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+  box-shadow: 4px 4px 0px var(--shadow-color);
 }
 
 #room-display {
@@ -183,7 +186,7 @@ body {
 
 #leave-btn {
   background: var(--text-color);
-  color: var(--text-color-light);
+  color: var(--bg-color);
   border: none;
   border-radius: var(--border-radius-sketchy);
   padding: 5px 15px;
@@ -201,7 +204,7 @@ body {
   bottom: 20px;
   left: 20px;
   width: 300px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--bg-overlay-chat);
   border: 2px solid var(--text-color);
   border-radius: 10px;
   display: flex;
@@ -237,7 +240,7 @@ body {
 }
 
 .dpad-btn {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--bg-overlay-dpad);
   border: 2px solid var(--text-color);
   border-radius: var(--border-radius-sketchy);
   font-size: 1.5rem;
@@ -246,7 +249,7 @@ body {
   user-select: none;
 }
 .dpad-btn:active {
-  background: #eee;
+  background: var(--accent-color);
 }
 
 .dpad-btn.up { grid-column: 2; grid-row: 1; }
