@@ -7,9 +7,31 @@ const joinBtn = document.getElementById('join-btn');
 const usernameInput = document.getElementById('username');
 const roomInput = document.getElementById('room');
 const dpadBtns = document.querySelectorAll('.dpad-btn');
+const roomDisplay = document.getElementById('room-display');
+const leaveBtn = document.getElementById('leave-btn');
 
 let currentRoom = '';
 const GRID_SIZE = 30;
+
+function joinRoom(username, room, color) {
+  currentRoom = room;
+  
+  joinScreen.style.display = 'none';
+  gameContainer.classList.remove('hidden');
+  document.body.classList.add('paper-bg');
+  
+  roomDisplay.innerText = `Room: ${room}`;
+  
+  sessionStorage.setItem('hangout_user', JSON.stringify({ username, room, color }));
+  
+  socket.emit('join', { username, room, color });
+}
+
+const savedSession = sessionStorage.getItem('hangout_user');
+if (savedSession) {
+  const { username, room, color } = JSON.parse(savedSession);
+  joinRoom(username, room, color);
+}
 
 joinBtn.addEventListener('click', () => {
   const username = usernameInput.value.trim();
@@ -17,14 +39,13 @@ joinBtn.addEventListener('click', () => {
   const color = document.querySelector('input[name="color"]:checked').value;
   
   if (username && room) {
-    currentRoom = room;
-    
-    joinScreen.style.display = 'none';
-    gameContainer.classList.remove('hidden');
-    document.body.classList.add('paper-bg');
-    
-    socket.emit('join', { username, room, color });
+    joinRoom(username, room, color);
   }
+});
+
+leaveBtn.addEventListener('click', () => {
+  sessionStorage.removeItem('hangout_user');
+  window.location.reload();
 });
 
 socket.on('stateUpdate', (roomState) => {

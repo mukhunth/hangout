@@ -28,8 +28,8 @@ io.on('connection', (socket) => {
     rooms[room].users[socket.id] = {
       username,
       color,
-      x: 5,
-      y: 5
+      x: Math.floor(Math.random() * 10) + 1,
+      y: Math.floor(Math.random() * 10) + 1
     };
 
     io.to(room).emit('stateUpdate', rooms[room]);
