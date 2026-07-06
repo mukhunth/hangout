@@ -6,7 +6,6 @@ const gridWorld = document.getElementById('grid-world');
 const joinBtn = document.getElementById('join-btn');
 const usernameInput = document.getElementById('username');
 const roomInput = document.getElementById('room');
-const dpadBtns = document.querySelectorAll('.dpad-btn');
 const roomDisplay = document.getElementById('room-display');
 const leaveBtn = document.getElementById('leave-btn');
 
@@ -19,7 +18,6 @@ function joinRoom(username, room, color) {
   joinScreen.style.display = 'none';
   gameContainer.classList.remove('hidden');
   document.body.classList.add('paper-bg');
-  
   roomDisplay.innerText = `Room: ${room}`;
   
   sessionStorage.setItem('hangout_user', JSON.stringify({ username, room, color }));
@@ -56,6 +54,7 @@ socket.on('stateUpdate', (roomState) => {
   }
 });
 
+// Keyboard controls
 document.addEventListener('keydown', (e) => {
   if (joinScreen.style.display !== 'none') return;
   if (document.activeElement.id === 'chat-input') return;
@@ -71,12 +70,40 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-dpadBtns.forEach(btn => {
-  btn.addEventListener('touchstart', (e) => {
-    e.preventDefault(); 
-    const dir = btn.getAttribute('data-dir');
+// Swipe-to-move controls
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener('pointerdown', (e) => {
+  if (joinScreen.style.display !== 'none') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+  
+  touchStartX = e.clientX;
+  touchStartY = e.clientY;
+});
+
+document.addEventListener('pointerup', (e) => {
+  if (joinScreen.style.display !== 'none') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+
+  const touchEndX = e.clientX;
+  const touchEndY = e.clientY;
+  
+  const diffX = touchEndX - touchStartX;
+  const diffY = touchEndY - touchStartY;
+  
+  if (Math.abs(diffX) < 30 && Math.abs(diffY) < 30) return;
+
+  let dir = null;
+  if (Math.abs(diffX) > Math.abs(diffY)) {
+    dir = diffX > 0 ? 'right' : 'left';
+  } else {
+    dir = diffY > 0 ? 'down' : 'up';
+  }
+  
+  if (dir) {
     socket.emit('move', { dir });
-  });
+  }
 });
 
 function renderAvatar(id, data) {

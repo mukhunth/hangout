@@ -38,7 +38,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,7 +116,7 @@ body {
 #game-container {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
 }
 
 #game-container.hidden {
@@ -157,7 +157,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   display: flex;
   flex-direction: column;
@@ -228,44 +228,26 @@ body {
   border-radius: 0 0 10px 10px;
 }
 
-#mobile-dpad {
-  pointer-events: auto;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+#swipe-label {
   display: none;
-  grid-template-columns: 50px 50px 50px;
-  grid-template-rows: 50px 50px 50px;
-  gap: 5px;
-}
-
-.dpad-btn {
-  background: var(--bg-overlay-dpad);
-  border: 2px solid var(--text-color);
-  border-radius: var(--border-radius-sketchy);
+  position: absolute;
+  top: 80px;
+  width: 100vw;
+  text-align: center;
   font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-}
-.dpad-btn:active {
-  background: var(--accent-color);
+  color: var(--text-color);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
-.dpad-btn.up { grid-column: 2; grid-row: 1; }
-.dpad-btn.left { grid-column: 1; grid-row: 2; }
-.dpad-btn.right { grid-column: 3; grid-row: 2; }
-.dpad-btn.down { grid-column: 2; grid-row: 3; }
-
-@media (max-width: 768px) {
-  #mobile-dpad {
-    display: grid;
+@media (pointer: coarse) {
+  #swipe-label {
+    display: block;
   }
   #chat-box {
-    width: calc(100vw - 200px);
-    height: 120px;
+    width: calc(100vw - 40px);
   }
   #chat-messages {
-    height: 80px;
+    height: 100px;
   }
 }
