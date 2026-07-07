@@ -17,11 +17,11 @@
       <input type="text" id="room" placeholder="room code" autocomplete="off" maxlength="10">
       
       <div class="color-picker">
-        <label><input type="radio" name="color" value="#ffb3ba" checked><span class="swatch" style="background: #ffb3ba"></span></label>
-        <label><input type="radio" name="color" value="#ffdfba"><span class="swatch" style="background: #ffdfba"></span></label>
-        <label><input type="radio" name="color" value="#ffffba"><span class="swatch" style="background: #ffffba"></span></label>
+        <label><input type="radio" name="color" value="#bae1ff" checked><span class="swatch" style="background: #bae1ff"></span></label>
         <label><input type="radio" name="color" value="#baffc9"><span class="swatch" style="background: #baffc9"></span></label>
-        <label><input type="radio" name="color" value="#bae1ff"><span class="swatch" style="background: #bae1ff"></span></label>
+        <label><input type="radio" name="color" value="#ffffba"><span class="swatch" style="background: #ffffba"></span></label>
+        <label><input type="radio" name="color" value="#ffdfba"><span class="swatch" style="background: #ffdfba"></span></label>
+        <label><input type="radio" name="color" value="#ffb3ba"><span class="swatch" style="background: #ffb3ba"></span></label>
       </div>
 
       <button type="submit" id="join-btn">join room</button>
@@ -43,23 +43,27 @@
         </div>
       </div>
 
+      <div id="ui-top">
+        <div id="move-label">use wasd or arrow keys to move</div>
+        <div id="swipe-label">swipe anywhere to move</div>
+      </div>
+
       <div id="video-overlay" class="hidden">
         <div id="yt-player"></div>
       </div>
 
-      <div id="action-stack">
-        <button id="close-video-btn" class="stack-btn hidden">x close party</button>
-        <button id="watch-party-btn" class="stack-btn">watch party</button>
-        <button id="leave-btn">leave <span id="room-display"></span></button>
+      <div id="ui-bottom">
+        <div id="chat-box">
+          <div id="chat-messages"></div>
+          <input type="text" id="chat-input" placeholder="say something..." autocomplete="off">
+        </div>
+        
+        <div id="action-stack">
+          <button id="close-video-btn" class="stack-btn hidden">x close party</button>
+          <button id="watch-party-btn" class="stack-btn">watch party</button>
+          <button id="leave-btn">leave <span id="room-display"></span></button>
+        </div>
       </div>
-      
-      <div id="chat-box">
-        <div id="chat-messages"></div>
-        <input type="text" id="chat-input" placeholder="say something..." autocomplete="off">
-      </div>
-      
-      <div id="move-label">use wasd or arrow keys to move</div>
-      <div id="swipe-label">swipe anywhere to move</div>
     </div>
   </div>
 
