@@ -22,7 +22,10 @@ io.on('connection', (socket) => {
     socket.join(room);
 
     if (!rooms[room]) {
-      rooms[room] = { users: {} };
+      rooms[room] = { 
+        users: {},
+        videoState: { videoId: null, state: -1, time: 0, lastUpdate: Date.now() }
+      };
     }
 
     rooms[room].users[socket.id] = {
@@ -34,6 +37,15 @@ io.on('connection', (socket) => {
 
     io.to(room).emit('stateUpdate', rooms[room]);
     io.to(room).emit('chatMessage', { type: 'system', text: `${username} joined the room` });
+    
+    if (rooms[room].videoState.videoId) {
+      const vs = rooms[room].videoState;
+      let currentTime = vs.time;
+      if (vs.state === 1) {
+        currentTime += (Date.now() - vs.lastUpdate) / 1000;
+      }
+      socket.emit('videoSync', { videoId: vs.videoId, time: currentTime });
+    }
   });
 
   socket.on('move', ({ dir }) => {
@@ -59,6 +71,28 @@ io.on('connection', (socket) => {
       color: user.color,
       text: text
     });
+  });
+
+  socket.on('videoCommand', (cmd) => {
+    if (!currentRoom || !rooms[currentRoom]) return;
+    
+    const vs = rooms[currentRoom].videoState;
+    if (cmd.action === 'load') {
+      vs.videoId = cmd.videoId;
+      vs.state = -1;
+      vs.time = 0;
+    } else if (cmd.action === 'play') {
+      vs.state = 1;
+      vs.time = cmd.time;
+      vs.lastUpdate = Date.now();
+    } else if (cmd.action === 'pause') {
+      vs.state = 2;
+      vs.time = cmd.time;
+    } else if (cmd.action === 'close') {
+      vs.videoId = null;
+    }
+    
+    socket.broadcast.to(currentRoom).emit('videoCommand', cmd);
   });
 
   socket.on('disconnect', () => {

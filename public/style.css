@@ -260,6 +260,41 @@ body {
   pointer-events: none;
 }
 
+.hidden {
+  display: none !important;
+}
+
+#url-modal {
+  position: absolute;
+  top: 0; left: 0; width: 100vw; height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.5);
+  pointer-events: auto;
+  z-index: 200;
+}
+
+#video-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100vw; height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 150;
+}
+
+#video-overlay iframe {
+  width: 90vw;
+  max-width: 800px;
+  height: 60vh;
+  border: 4px solid var(--text-color);
+  border-radius: var(--border-radius-sketchy);
+  pointer-events: auto;
+  box-shadow: 8px 8px 0px var(--shadow-color);
+}
+
 @media (pointer: coarse) {
   #swipe-label {
     display: block;

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Hangout</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://www.youtube.com/iframe_api"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -31,8 +32,24 @@
     <div id="grid-world"></div>
     
     <div id="ui-layer">
+      <div id="url-modal" class="hidden">
+        <div class="join-box">
+          <h2>paste youtube link</h2>
+          <input type="text" id="yt-url-input" placeholder="https://youtube.com/..." autocomplete="off">
+          <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button id="start-party-btn">start</button>
+            <button id="cancel-party-btn" style="background: var(--text-color-muted);">cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="video-overlay" class="hidden">
+        <div id="yt-player"></div>
+      </div>
+
       <div id="action-stack">
-        <button class="stack-btn">watch party</button>
+        <button id="close-video-btn" class="stack-btn hidden">x close party</button>
+        <button id="watch-party-btn" class="stack-btn">watch party</button>
         <button id="leave-btn">leave <span id="room-display"></span></button>
       </div>
       

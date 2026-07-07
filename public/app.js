@@ -10,6 +10,13 @@ const roomDisplay = document.getElementById('room-display');
 const leaveBtn = document.getElementById('leave-btn');
 const chatInput = document.getElementById('chat-input');
 const chatMessages = document.getElementById('chat-messages');
+const watchPartyBtn = document.getElementById('watch-party-btn');
+const urlModal = document.getElementById('url-modal');
+const ytUrlInput = document.getElementById('yt-url-input');
+const startPartyBtn = document.getElementById('start-party-btn');
+const cancelPartyBtn = document.getElementById('cancel-party-btn');
+const videoOverlay = document.getElementById('video-overlay');
+const closeVideoBtn = document.getElementById('close-video-btn');
 
 let currentRoom = '';
 const GRID_SIZE = 30;
@@ -151,3 +158,117 @@ function renderAvatar(id, data) {
   el.style.left = `${data.x * GRID_SIZE}px`;
   el.style.top = `${data.y * GRID_SIZE}px`;
 }
+
+// Watch Party
+let player;
+let isInitializing = false;
+let ignoreUntil = 0;
+
+window.onYouTubeIframeAPIReady = function() {};
+
+function initPlayer(videoId, startSeconds = 0) {
+  if (player) {
+    player.loadVideoById({ videoId, startSeconds });
+    videoOverlay.classList.remove('hidden');
+    closeVideoBtn.classList.remove('hidden');
+    return;
+  }
+  
+  videoOverlay.classList.remove('hidden');
+  closeVideoBtn.classList.remove('hidden');
+  isInitializing = true;
+  player = new YT.Player('yt-player', {
+    height: '100%',
+    width: '100%',
+    videoId: videoId,
+    playerVars: { 
+      'autoplay': 1, 
+      'controls': 1,
+      'start': Math.floor(startSeconds)
+    },
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerStateChange(event) {
+  if (isInitializing) {
+    if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.PAUSED) {
+      isInitializing = false;
+    }
+    return;
+  }
+  
+  if (event.data !== YT.PlayerState.PLAYING && event.data !== YT.PlayerState.PAUSED) return;
+  
+  if (Date.now() < ignoreUntil) return;
+  
+  const time = player.getCurrentTime();
+  if (event.data === YT.PlayerState.PLAYING) {
+    socket.emit('videoCommand', { action: 'play', time });
+  } else if (event.data === YT.PlayerState.PAUSED) {
+    socket.emit('videoCommand', { action: 'pause', time });
+  }
+}
+
+watchPartyBtn.addEventListener('click', () => {
+  urlModal.classList.remove('hidden');
+});
+
+cancelPartyBtn.addEventListener('click', () => {
+  urlModal.classList.add('hidden');
+  ytUrlInput.value = '';
+});
+
+startPartyBtn.addEventListener('click', () => {
+  const url = ytUrlInput.value.trim();
+  if (!url) return;
+  
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+  if (match && match[1]) {
+    initPlayer(match[1]);
+    socket.emit('videoCommand', { action: 'load', videoId: match[1] });
+    urlModal.classList.add('hidden');
+    ytUrlInput.value = '';
+  } else {
+    alert("Invalid YouTube URL");
+  }
+});
+
+closeVideoBtn.addEventListener('click', () => {
+  videoOverlay.classList.add('hidden');
+  closeVideoBtn.classList.add('hidden');
+  if (player && player.stopVideo) player.stopVideo();
+  socket.emit('videoCommand', { action: 'close' });
+});
+
+socket.on('videoCommand', (cmd) => {
+  ignoreUntil = Date.now() + 1000;
+  
+  if (cmd.action === 'load') {
+    initPlayer(cmd.videoId);
+  } else if (cmd.action === 'play') {
+    if (player && player.seekTo) {
+      if (Math.abs(player.getCurrentTime() - cmd.time) > 2) {
+        player.seekTo(cmd.time, true);
+      }
+      player.playVideo();
+    }
+  } else if (cmd.action === 'pause') {
+    if (player && player.pauseVideo) {
+      if (Math.abs(player.getCurrentTime() - cmd.time) > 2) {
+        player.seekTo(cmd.time, true);
+      }
+      player.pauseVideo();
+    }
+  } else if (cmd.action === 'close') {
+    videoOverlay.classList.add('hidden');
+    closeVideoBtn.classList.add('hidden');
+    if (player && player.stopVideo) player.stopVideo();
+  }
+});
+
+socket.on('videoSync', (vs) => {
+  initPlayer(vs.videoId, vs.time);
+});
